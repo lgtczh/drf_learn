@@ -21,7 +21,9 @@ schemas_view = get_schema_view(title='drf')  # pip install coreapi pyyaml
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', include('users.urls')),
     path('', include('snippets.urls')),
+    # path('', include('app1.urls')),
     path('schema/', schemas_view),
     path('api-auth/', include('rest_framework.urls'))
 ]

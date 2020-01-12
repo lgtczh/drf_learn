@@ -182,7 +182,7 @@
 #
 # from snippets.models import Snippet
 # from snippets.permissions import IsOwnerOrReadOnly
-# from snippets.serializers import SnippetSerializer, UserSerializer
+# from snippets.serializers import SnippetSerializer
 #
 #
 # class SnippetList(generics.ListCreateAPIView):
@@ -198,32 +198,16 @@
 #     queryset = Snippet.objects.all()
 #     serializer_class = SnippetSerializer
 #     permission_classes = (IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly)
-#
-#
-# class UserList(generics.ListAPIView):
-#     queryset = Snippet.objects.all()
-#     serializer_class = UserSerializer
-#
-#
-# class UserDetail(generics.RetrieveAPIView):
-#     queryset = Snippet.objects.all()
-#     serializer_class = UserSerializer
 
 
 # --------------------------------------------------- 6 ---------------------------------------------------
-from django.contrib.auth.models import User
 from rest_framework import viewsets, permissions, renderers
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from snippets.models import Snippet
 from snippets.permissions import IsOwnerOrReadOnly
-from snippets.serializers import UserSerializer, SnippetSerializer
-
-
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
+from snippets.serializers import SnippetSerializer
 
 
 class SnippetViewSet(viewsets.ModelViewSet):
@@ -238,3 +222,26 @@ class SnippetViewSet(viewsets.ModelViewSet):
     def highlight(self, request, *args, **kwargs):
         snippet = self.get_object()
         return Response(snippet.highlighted)
+
+    def list(self, request, *args, **kwargs):
+        print('request.data .............', request.data)
+        print('request.query_params .....', request.query_params)
+        print('request.parsers ..........', request.parsers)
+        print('request.authenticators ...', request.authenticators)
+        print('request.user .............', request.user)
+        print('request.auth .............', request.auth)
+        # return super(SnippetViewSet, self).list(request, *args, **kwargs)
+        queryset = self.filter_queryset(self.get_queryset())
+
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        res = Response(serializer.data)
+        print("response.data .............", res.data)
+        print("response.status_code ......", res.status_code)
+        print("response.status_text ......", res.status_text)
+        print("response.template_name ....", res.template_name)
+        return res

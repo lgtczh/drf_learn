@@ -1,7 +1,6 @@
-from django.contrib.auth.models import User
-from rest_framework import serializers
-
-from snippets.models import LANGUAGES_CHOICES, STYLE_CHOICES, Snippet
+# from rest_framework import serializers
+#
+# from snippets.models import LANGUAGES_CHOICES, STYLE_CHOICES, Snippet
 
 
 # class SnippetSerializer(serializers.Serializer):
@@ -24,18 +23,15 @@ from snippets.models import LANGUAGES_CHOICES, STYLE_CHOICES, Snippet
 #     def create(self, validated_data):
 #         return Snippet.objects.create(**validated_data)  # ORM的api, 创建新的记录(新代码片段)
 
+
+from rest_framework import serializers
+
+from snippets.models import Snippet
+
+
 class SnippetSerializer(serializers.ModelSerializer):
     owner = serializers.ReadOnlyField(source='owner.username')
 
     class Meta:
         model = Snippet
         fields = ['id', 'title', 'code', 'linenos', 'language', 'style', 'owner']
-
-
-class UserSerializer(serializers.ModelSerializer):
-    # https://www.cnblogs.com/chichung/p/9937176.html
-    snippets = serializers.PrimaryKeyRelatedField(many=True, queryset=Snippet.objects.all())
-
-    class Meta:
-        model = User
-        fields = ['id', 'username', 'snippets']

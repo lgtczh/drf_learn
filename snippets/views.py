@@ -214,6 +214,7 @@ class SnippetViewSet(viewsets.ModelViewSet):
     queryset = Snippet.objects.all()
     serializer_class = SnippetSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    renderer_classes = [renderers.JSONRenderer, ]
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)

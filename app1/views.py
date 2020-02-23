@@ -4,7 +4,7 @@ from rest_framework import generics
 
 
 # Create your views here.
-class PostList(generics.RetrieveAPIView):
+class PostDetail(generics.RetrieveAPIView):
     serializer_class = PostSerializers
     lookup_url_kwarg = "ns"
 

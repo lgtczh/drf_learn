@@ -1,0 +1,6 @@
+Django==2.1.4
+django-filter==2.2.0
+djangorestframework==3.10.3
+pymysql==0.9.3
+pygments
+mysqlclient==1.4.6

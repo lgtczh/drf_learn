@@ -17,6 +17,4 @@ from users.views import UserViewSet
 router = DefaultRouter()
 router.register(r'users', UserViewSet)
 
-urlpatterns = [
-    path(r'', include(router.urls))
-]
+urlpatterns = router.urls

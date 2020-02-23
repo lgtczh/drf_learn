@@ -1,7 +1,10 @@
+from rest_framework.authentication import SessionAuthentication
+from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet
 
 from .models import User, Topic, Post
 from .serializers import UserSerializer, TopicSerializer, PostsSerializer
+from users.auth import MyAuthentication
 
 
 # Create your views here.
@@ -16,5 +19,7 @@ class TopicViewSet(ModelViewSet):
 
 
 class PostViewSet(ModelViewSet):
+    authentication_classes = (MyAuthentication, SessionAuthentication, )
+    permission_classes = (IsAuthenticated,)
     queryset = Post.objects.all()
     serializer_class = PostsSerializer
